@@ -26,6 +26,12 @@ public class PlayerController : MonoBehaviour
         verticalInput = Input.GetAxis("Vertical");
         hyp = MathF.Sqrt((horizontalInput * horizontalInput)+(verticalInput * verticalInput));
         if(!GetComponent<MovementAction>().isDashing && hyp != 0){
+            if(Math.Sign(horizontalInput) == -1*Math.Sign(playerRB.velocity.x)){
+                horizontalInput *= 5;
+            }
+            if(Math.Sign(verticalInput) == -1*Math.Sign(playerRB.velocity.z)){
+                verticalInput *= 5;
+            }
             playerRB.AddForce(new Vector3((horizontalInput/hyp)*speed ,0f, (verticalInput/hyp) * speed ), ForceMode.Acceleration);
         }
         if(!GetComponent<MovementAction>().isDashing){
@@ -37,10 +43,10 @@ public class PlayerController : MonoBehaviour
             }
         }
         if(horizontalInput == 0){
-            playerRB.AddForce(-playerRB.velocity.x * speed,0f,0f);
+            playerRB.AddForce(-playerRB.velocity.x * speed * 0.1f,0f,0f);
         }
         if(verticalInput == 0){
-            playerRB.AddForce(0f,0f,-playerRB.velocity.z * speed );
+            playerRB.AddForce(0f,0f,-playerRB.velocity.z * speed * 0.1f);
         }
         if(Mathf.Abs(playerRB.velocity.x) < 0.001f){
             playerRB.velocity = new Vector3(0f, playerRB.velocity.y, playerRB.velocity.z);
