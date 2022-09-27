@@ -6,12 +6,12 @@ public class DefaultProjectile : MonoBehaviour
 {
     // Start is called before the first frame update
     public float speed;
-    private Rigidbody proj;
-    private Rigidbody player;
-    private bool rtf; // ready to fire
+    protected Rigidbody proj;
+    protected Rigidbody player;
+    protected bool rtf; // ready to fire
     public float rpm;
     public float travelTime;
-    void Start()
+    protected void Start()
     {
         rtf = true;
         speed = 25.0f;
@@ -20,7 +20,7 @@ public class DefaultProjectile : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    protected void Update()
     {
         if(Input.GetKeyDown(KeyCode.E) && rtf){
             StartCoroutine(Shoot());
@@ -28,7 +28,7 @@ public class DefaultProjectile : MonoBehaviour
         }
     }
 
-    IEnumerator Shoot(){
+    protected IEnumerator Shoot(){
         Rigidbody clone;
         rtf = false;
         clone = (Rigidbody)Instantiate(proj, player.position + (player.rotation * new Vector3(0,0.5f,1.5f)), new Quaternion(0f, player.rotation.y, 0f, player.rotation.w));

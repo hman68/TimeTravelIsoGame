@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using System;
 
 public class PlayerController : MonoBehaviour
@@ -11,6 +12,8 @@ public class PlayerController : MonoBehaviour
     private float prevHoriz;
     private float prevVert;
     private float hyp;
+    private DefaultInput PlayerInput;
+    private InputAction movementVector;
     public float maxSpeed;
     public float speed;
     // Start is called before the first frame update
@@ -18,12 +21,21 @@ public class PlayerController : MonoBehaviour
     {
         playerRB = GetComponent<Rigidbody>();
     }
-
+    void Awake(){
+        PlayerInput = new DefaultInput();
+    }
+    void OnEnable(){
+        movementVector = PlayerInput.Player.Move;
+        movementVector.Enable();
+    }
+    void OnDisable(){
+        movementVector.Disable();
+    }
     // Update is called once per frame
     void FixedUpdate()
     {
-        horizontalInput = Input.GetAxis("Horizontal");
-        verticalInput = Input.GetAxis("Vertical");
+        horizontalInput = movementVector.ReadValue<Vector2>().x;
+        verticalInput = movementVector.ReadValue<Vector2>().y;
         hyp = MathF.Sqrt((horizontalInput * horizontalInput)+(verticalInput * verticalInput));
         if(!GetComponent<MovementAction>().isDashing && hyp != 0){
             if(Math.Sign(horizontalInput) == -1*Math.Sign(playerRB.velocity.x)){

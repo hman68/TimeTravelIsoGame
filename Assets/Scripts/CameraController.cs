@@ -6,8 +6,8 @@ public class CameraController : MonoBehaviour
 {
     private GameObject player;
     private Transform playerPos;
-    public float xConstraints = 50.0f;
-    public float yConstraints = 50.0f;
+    public float xConstraints = 10.0f;
+    public float yConstraints = 10.0f;
     // Start is called before the first frame update
     void Start()
     {
