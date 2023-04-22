@@ -5,22 +5,18 @@ using UnityEngine;
 public class Projectile : MonoBehaviour
 {
     // Start is called before the first frame update
-    private float speed;
-    Rigidbody projRb;
-    void Start()
+    [SerializeField] private float speed;
+    [System.NonSerialized] public float playerSpeed;
+    private Rigidbody projRb;
+    public GameObject player;
+    protected void Awake()
     {
-        speed = 5f;
-        projRb = GetComponent<Rigidbody>();
+
     }
 
     // Update is called once per frame
-    void Update()
+    protected void Update()
     {
-        /*if(EventManager.currentGameState == GameState.Play)
-        {
-            transform.position += new Vector3(0, 1, 0) * Time.deltaTime * speed;
-        }
-        */
-        projRb.AddForce(gameObject.transform.forward * speed * Time.deltaTime);
+        rm.Translate(transform.forward * speed * Time.deltaTime);
     }
 }

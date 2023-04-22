@@ -10,34 +10,35 @@ public class MovementAction : MonoBehaviour
     public float cooldown;
     private Vector3 normVelocity;
     public bool isDashing;
-    private bool ready = true;
+    public bool ready  { get; private set; } = true;
+    private MovementAction dash;
     // Start is called before the first frame update
     void Start()
     {
 
         rb = GetComponent<Rigidbody>();
         isDashing = false;
-
+        dash = GetComponent<MovementAction>();
     }
 
     // Update is called once per frame
     void Update()
     {
        
-        if(Input.GetKeyDown(KeyCode.Space) && ready)
+        /*if(Input.GetKeyDown(KeyCode.Space) && ready)
         {
             Debug.Log("DashAttempt");
             StartCoroutine(Dash());
         }
         if(Input.GetKeyDown(KeyCode.Space)){
             Debug.Log("Space");
-        }
+        }*/
 
     }
     /*
     Dashes the character in a certain direction
     */
-    IEnumerator Dash()
+    public IEnumerator Dash()
     {
         Debug.Log("Dashing");
         isDashing = true;

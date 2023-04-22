@@ -2,12 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Fireball : DefaultProjectile
+public class Fireball : Projectile
 {
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
-       base.Start(); 
+       base.Awake(); 
     }
 
     // Update is called once per frame

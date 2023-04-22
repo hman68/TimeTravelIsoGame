@@ -18,10 +18,7 @@ public class Melee : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.Mouse0) && rtm){
-            Debug.Log("f");
-            StartCoroutine("MeleeAttack");
-        }
+
     }
 
     IEnumerator MeleeAttack(){

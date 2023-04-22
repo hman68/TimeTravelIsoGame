@@ -6,6 +6,7 @@ using System;
 
 public class PlayerController : MonoBehaviour
 {
+    private Projectile equippedProjectile;
     private Rigidbody playerRB;
     private float horizontalInput;
     private float verticalInput;
@@ -16,10 +17,13 @@ public class PlayerController : MonoBehaviour
     private InputAction movementVector;
     public float maxSpeed;
     public float speed;
+    private bool rtf {get; set;}
+    [SerializeField] private MovementAction MovemementScript;
     // Start is called before the first frame update
     void Start()
     {
         playerRB = GetComponent<Rigidbody>();
+        equippedProjectile = Resources.Load<Projectile>("Prefabs/Projectiles/Projectile");
     }
     void Awake(){
         PlayerInput = new DefaultInput();
@@ -55,10 +59,10 @@ public class PlayerController : MonoBehaviour
             }
         }
         if(horizontalInput == 0){
-            playerRB.AddForce(-playerRB.velocity.x * speed * 0.1f,0f,0f);
+            playerRB.AddForce(-playerRB.velocity.x * speed * 0.5f,0f,0f);
         }
         if(verticalInput == 0){
-            playerRB.AddForce(0f,0f,-playerRB.velocity.z * speed * 0.1f);
+            playerRB.AddForce(0f,0f,-playerRB.velocity.z * speed * 0.5f);
         }
         if(Mathf.Abs(playerRB.velocity.x) < 0.001f){
             playerRB.velocity = new Vector3(0f, playerRB.velocity.y, playerRB.velocity.z);
@@ -71,5 +75,19 @@ public class PlayerController : MonoBehaviour
     public void takeDamage(float dam){
 
     }
+    public void OnFire(){
+        Debug.Log("fired");
+        if(rtf == true){
+            Projectile proj = Instantiate(equippedProjectile, transform.position, transform.rotation);
+            proj.playerSpeed = playerRB.velocity.magnitude;
+            rtf == false;
+        }
+    }
 
+    public void OnDash(){
+        if(MovemementScript.ready == true){
+            Debug.Log("Dash Attempt");
+            StartCoroutine(MovemementScript.Dash());    
+        }
+    }
 }
