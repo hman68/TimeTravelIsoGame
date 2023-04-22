@@ -7,6 +7,7 @@ using System;
 public class PlayerController : MonoBehaviour
 {
     private Projectile equippedProjectile;
+    private Projectile altEquippedProjectile;
     private Rigidbody playerRB;
     private float horizontalInput;
     private float verticalInput;
@@ -17,13 +18,14 @@ public class PlayerController : MonoBehaviour
     private InputAction movementVector;
     public float maxSpeed;
     public float speed;
-    private bool rtf {get; set;}
+    public bool rtf = true, rtf2 = true;
     [SerializeField] private MovementAction MovemementScript;
     // Start is called before the first frame update
     void Start()
     {
         playerRB = GetComponent<Rigidbody>();
         equippedProjectile = Resources.Load<Projectile>("Prefabs/Projectiles/Projectile");
+        altEquippedProjectile = Resources.Load<Projectile>("Prefabs/Projectiles/Fireball");
     }
     void Awake(){
         PlayerInput = new DefaultInput();
@@ -76,11 +78,16 @@ public class PlayerController : MonoBehaviour
 
     }
     public void OnFire(){
-        Debug.Log("fired");
+        Debug.Log("FireAttempt");
+        Debug.Log(rtf);
         if(rtf == true){
+            Debug.Log("Fired");
             Projectile proj = Instantiate(equippedProjectile, transform.position, transform.rotation);
+            proj.player = this as PlayerController;
             proj.playerSpeed = playerRB.velocity.magnitude;
-            rtf == false;
+            rtf = false;
+            proj.SendMessage("Start");
+            StartCoroutine(WaitUntilReadyToFire(proj, false));
         }
     }
 
@@ -88,6 +95,27 @@ public class PlayerController : MonoBehaviour
         if(MovemementScript.ready == true){
             Debug.Log("Dash Attempt");
             StartCoroutine(MovemementScript.Dash());    
+        }
+    }
+    
+    public void OnAltFire(){
+        if(rtf2){
+            Projectile proj = Instantiate(altEquippedProjectile, transform.position, transform.rotation);
+            proj.player = this as PlayerController;
+            proj.playerSpeed = playerRB.velocity.magnitude;
+            rtf2 = false;
+            proj.SendMessage("Start");
+            StartCoroutine(WaitUntilReadyToFire(proj, true));
+        }
+    }
+
+    protected IEnumerator WaitUntilReadyToFire(Projectile p, bool alt)
+    {
+        yield return new WaitForSecondsRealtime(1/Projectile.rps);
+        if(alt){
+            rtf2 = true;
+        }else{
+            rtf = true;
         }
     }
 }

@@ -5,18 +5,36 @@ using UnityEngine;
 public class Projectile : MonoBehaviour
 {
     // Start is called before the first frame update
-    [SerializeField] private float speed;
+    [SerializeField] protected float speed;
+    public const float rps = 1f;
     [System.NonSerialized] public float playerSpeed;
-    private Rigidbody projRb;
-    public GameObject player;
-    protected void Awake()
-    {
+    public PlayerController player;
+    protected const float damage = 5f;
 
+    protected void Start()
+    {
+        StartCoroutine(ProjectileFlight());
+        GetComponent<Rigidbody>().AddRelativeForce(Vector3.forward * speed);
     }
 
     // Update is called once per frame
     protected void Update()
     {
-        rm.Translate(transform.forward * speed * Time.deltaTime);
+        Debug.DrawRay(transform.position, transform.rotation * Vector3.forward);
+    }
+
+    protected IEnumerator ProjectileFlight()
+    {
+        yield return new WaitForSecondsRealtime(5f);
+        Destroy(this.gameObject);
+    }
+
+
+
+    protected void OnCollisionEnter(Collision collision)
+    {
+        Debug.Log(collision.gameObject);
+        collision.gameObject.SendMessage("takeDamage", damage);
+        Destroy(this.gameObject);
     }
 }
